@@ -1,0 +1,114 @@
+:root {
+  --bg-color: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --font-hand: 'Architects Daughter', cursive;
+  --font-body: 'Outfit', sans-serif;
+  --transition-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.handwriting {
+  font-family: var(--font-hand);
+}
+
+.fluid-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Custom rough border inspired by the logo */
+.rough-border {
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.rough-border::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 1.5px solid var(--text-primary);
+  border-radius: 2px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Smooth page transitions */
+.page-fade-in {
+  animation: fadeIn 1.2s var(--transition-smooth) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Floating animation */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  padding: 0.8rem 1.5rem;
+  border: 1.5px solid var(--text-primary);
+  border-radius: 99px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.8rem;
+}
+
+.btn-primary:hover {
+  background: var(--text-primary);
+  color: white;
+}
