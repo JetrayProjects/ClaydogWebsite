@@ -114,17 +114,52 @@ const FilmDetails = ({ project, videoSrc, onBack }) => {
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
               transition={{ duration: 0.5, delay: 0.55, ease: [0.33, 1, 0.68, 1] }}
               style={{
-              fontFamily: 'var(--font-body), sans-serif',
-              fontSize: '1.1rem',
-              lineHeight: '1.6',
-              color: '#333'
-            }}>
-              <p style={{ marginBottom: '1rem' }}>
-                This is a placeholder description for {project}. It explores the profound themes of human connection, isolation, and the relentless passage of time.
-              </p>
-              <p>
-                Shot on location with a dedicated crew, the visual storytelling relies heavily on natural light and intimate character moments to convey a narrative that is both personal and universal.
-              </p>
+                fontFamily: 'var(--font-body), sans-serif',
+                fontSize: '1.1rem',
+                lineHeight: '1.6',
+                color: '#333'
+              }}
+            >
+              {(() => {
+                const normalized = (project || '').toLowerCase().trim();
+                if (normalized === 'on the back burner') {
+                  return (
+                    <>
+                      <p style={{ marginBottom: '1rem' }}>
+                        On the Backburner is a slow, intimate drama that follows two immigrant friends in the UK as they drift through conversations about work, dreams, and displacement.
+                      </p>
+                      <p>
+                        Beneath their casual exchanges lies the quiet anxiety of survival, visas, instability, and the fear of being sent back. As tensions rise between responsibility and desire, the film captures the emotional limbo of putting one’s life “on hold” in a foreign land.
+                      </p>
+                    </>
+                  );
+                }
+                if (normalized === 'the blade and the butterfly') {
+                  return (
+                    <>
+                      <p style={{ marginBottom: '1rem' }}>
+                        The Blade and the Butterfly is a thriller centered on Sonia, a ballet dancer whose life is upended when she is kidnapped by gangsters from her instructor Andre’s criminal past. Andre, a former member of "The Krows," attempts to rescue her from his former associate, Kevin, but is brutally defeated in a violent confrontation.
+                      </p>
+                      <p style={{ marginBottom: '1rem' }}>
+                        The film reaches its climax as Sonia finds her own strength to fight back, with her life-or-death struggle in an abandoned nightclub mirrored through flash-forwards to her graceful "Birth of the Butterfly" stage performance.
+                      </p>
+                      <p>
+                        Ultimately, Sonia uses her agility and a final act of violence to defeat Kevin and secure her survival.
+                      </p>
+                    </>
+                  );
+                }
+                return (
+                  <>
+                    <p style={{ marginBottom: '1rem' }}>
+                      This is a placeholder description for {project}. It explores the profound themes of human connection, isolation, and the relentless passage of time.
+                    </p>
+                    <p>
+                      Shot on location with a dedicated crew, the visual storytelling relies heavily on natural light and intimate character moments to convey a narrative that is both personal and universal.
+                    </p>
+                  </>
+                );
+              })()}
             </motion.div>
           </div>
 

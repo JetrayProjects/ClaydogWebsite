@@ -65,8 +65,8 @@ interface PlaneData {
 }
 
 const DEFAULT_DEPTH_RANGE = 50;
-const MAX_HORIZONTAL_OFFSET = 3.5;
-const MAX_VERTICAL_OFFSET = 2.5;
+const MAX_HORIZONTAL_OFFSET = 5.2;
+const MAX_VERTICAL_OFFSET = 3.2;
 
 // Custom shader material for blur, opacity, and cloth folding effects
 const createClothMaterial = () => {
@@ -250,14 +250,16 @@ function GalleryScene({
 			const horizontalAngle = (i * 2.618) % (Math.PI * 2); // Golden angle for natural distribution
 			const verticalAngle = (i * 1.618 + Math.PI / 3) % (Math.PI * 2); // Offset angle for vertical
 
-			const horizontalRadius = (i % 3) * 1.2; // Vary the distance from center
-			const verticalRadius = ((i + 1) % 4) * 0.8; // Different pattern for vertical
+			// Push minimum horizontal radius outward (starting from 0.8 instead of 0)
+			const horizontalRadius = 0.8 + (i % 3) * 1.3; 
+			// Push minimum vertical radius outward slightly
+			const verticalRadius = 0.4 + ((i + 1) % 4) * 0.7; 
 
 			const x =
 				(Math.sin(horizontalAngle) * horizontalRadius * maxHorizontalOffset) /
-				3;
+				3.2;
 			const y =
-				(Math.cos(verticalAngle) * verticalRadius * maxVerticalOffset) / 4;
+				(Math.cos(verticalAngle) * verticalRadius * maxVerticalOffset) / 4.2;
 
 			positions.push({ x, y });
 		}
