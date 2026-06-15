@@ -555,6 +555,7 @@ export default function InfiniteGallery({
 		blurOut: { start: 0.42, end: 0.47 },
 		maxBlur: 6.0,
 	},
+	isPaused = false,
 }: InfiniteGalleryProps) {
 	const [webglSupported, setWebglSupported] = useState(true);
 
@@ -585,6 +586,7 @@ export default function InfiniteGallery({
 			<Canvas
 				camera={{ position: [0, 0, 0], fov: 55 }}
 				gl={{ antialias: true, alpha: true }}
+				frameloop={isPaused ? "demand" : "always"}
 			>
 				<Suspense fallback={null}>
 					<GalleryScene

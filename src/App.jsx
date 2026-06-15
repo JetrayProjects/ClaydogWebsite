@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from 'react'
 import Navbar from './components/Navbar'
 import InfiniteGallery from './components/ui/3d-gallery-photography'
 import ProjectsMenu from './components/ui/ProjectsMenu'
-import { motion, AnimatePresence } from 'framer-motion'
+import FilmDetails from './components/ui/FilmDetails'
+import FadedMorphText from './components/ui/FadedMorphText'
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { useProgress } from '@react-three/drei'
+
 
 const images = [
   '/landing_page/Additional PHOTOGRAPHY /000052.webp',
@@ -112,6 +115,7 @@ const HoverBranding = ({ onTriggerMenu }) => {
           position: 'relative'
         }}
       >
+        <FadedMorphText show={!isLoading} />
         <div style={{
           display: 'flex',
           flexDirection: isMobile ? 'column' : 'row',
@@ -189,6 +193,10 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showMenuContent, setShowMenuContent] = useState(false)
   const [showInstruction, setShowInstruction] = useState(false)
+  const [activeProject, setActiveProject] = useState(null)
+  const [lastActiveProject, setLastActiveProject] = useState(null)
+  const [activeVideoSrc, setActiveVideoSrc] = useState(null)
+  const returningFromProject = useRef(false)
 
   useEffect(() => {
     const timer = setTimeout(() => setShowInstruction(true), 2000)
@@ -199,26 +207,49 @@ function App() {
   useEffect(() => {
     let timeoutId;
     if (isMenuOpen) {
-      timeoutId = setTimeout(() => {
-        setShowMenuContent(true)
-      }, 600) // Show content after clay fills the screen
+      if (returningFromProject.current) {
+        // If returning, show menu immediately so shared layout animations can tween back
+        setShowMenuContent(true);
+      } else {
+        timeoutId = setTimeout(() => {
+          setShowMenuContent(true)
+        }, 1200) // Show content after clay fills the screen
+      }
     } else {
       setShowMenuContent(false)
+      returningFromProject.current = false // Reset so next menu open waits for clay
     }
-    return () => clearTimeout(timeoutId)
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    }
   }, [isMenuOpen])
 
   return (
     <div className="app-content" style={{ minHeight: '100vh', backgroundColor: '#fff', color: '#1a1a1a', position: 'relative' }}>
+      <LayoutGroup id="app-routing">
 
-      {/* 3D Gallery Hero Section */}
-      <section style={{ height: '100vh', width: '100%', position: 'relative', overflow: 'hidden' }}>
-        <InfiniteGallery
+        {/* Home section — always mounted, hidden when a project is active */}
+        <motion.section 
+          key="home"
+          animate={{ opacity: activeProject ? 0 : 1 }}
+          transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+          style={{
+            height: '100vh',
+            width: '100%',
+            position: 'absolute',
+            inset: 0,
+            overflow: 'hidden',
+            pointerEvents: activeProject ? 'none' : 'auto',
+            visibility: activeProject ? 'hidden' : 'visible',
+          }}
+        >
+            <InfiniteGallery
           images={images}
           speed={1.5}
           zSpacing={3}
           visibleCount={10}
           style={{ height: '100%', width: '100%' }}
+          isPaused={!!activeProject}
         />
 
         {/* Center Hovering Logo & Text Overlay */}
@@ -249,7 +280,7 @@ function App() {
           overflow: 'hidden'
         }}>
           <motion.div
-            initial={{ scale: 0, rotate: 0, borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' }}
+            initial={false}
             animate={{ 
               scale: isMenuOpen ? 150 : 0,
               rotate: isMenuOpen ? 90 : 0,
@@ -270,7 +301,16 @@ function App() {
         {/* Full-Screen Projects Menu overlay */}
         <AnimatePresence>
           {showMenuContent && (
-            <ProjectsMenu onClose={() => setIsMenuOpen(false)} />
+            <ProjectsMenu 
+              skipAnimation={returningFromProject.current}
+              onClose={() => setIsMenuOpen(false)} 
+              onSelectProject={(proj, src) => {
+                returningFromProject.current = false;
+                setActiveProject(proj);
+                setLastActiveProject(proj);
+                setActiveVideoSrc(src);
+              }} 
+            />
           )}
         </AnimatePresence>
 
@@ -290,21 +330,32 @@ function App() {
           pointerEvents: 'none'
         }}>
           <p style={{ margin: 0, opacity: 0.8 }}>Scroll or swipe to explore the gallery</p>
-          <AnimatePresence>
-            {showInstruction && !isMenuOpen && (
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
-                style={{ margin: '10px 0 0 0', fontWeight: 'bold', color: '#fff', letterSpacing: '0.15em' }}
-              >
-                Click or hover on logo to explore
-              </motion.p>
-            )}
-          </AnimatePresence>
         </div>
-      </section>
+      </motion.section>
+
+        {/* Project details — layered on top */}
+        <AnimatePresence>
+          {activeProject && (
+            <motion.section 
+              key="project-details"
+              initial={false}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+              style={{ position: 'absolute', inset: 0, zIndex: 100 }}
+            >
+              <FilmDetails 
+                project={lastActiveProject} 
+                videoSrc={activeVideoSrc} 
+                onBack={() => {
+                  returningFromProject.current = true;
+                  setActiveProject(null);
+                }} 
+              />
+            </motion.section>
+          )}
+        </AnimatePresence>
+
+      </LayoutGroup>
     </div>
   )
 }
