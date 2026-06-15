@@ -1,7 +1,7 @@
 'use client';
 
 import type React from 'react';
-import { useRef, useMemo, useCallback, useState, useEffect } from 'react';
+import { useRef, useMemo, useCallback, useState, useEffect, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
@@ -145,7 +145,7 @@ const createClothMaterial = () => {
           
           for (float x = -2.0; x <= 2.0; x += 1.0) {
             for (float y = -2.0; y <= 2.0; y += 1.0) {
-              vec2 offset = vec2(x, y) * texelSize * blurAmount;
+               vec2 offset = vec2(x, y) * texelSize * blurAmount;
               float weight = 1.0 / (1.0 + length(vec2(x, y)));
               blurred += texture2D(map, vUv + offset) * weight;
               total += weight;
@@ -364,7 +364,6 @@ function GalleryScene({
 		const imageAdvance =
 			totalImages > 0 ? visibleCount % totalImages || totalImages : 0;
 		const totalRange = depthRange;
-		const halfRange = totalRange / 2;
 
 		planesData.current.forEach((plane, i) => {
 			let newZ = plane.z + scrollVelocity * delta * 10;
@@ -392,8 +391,6 @@ function GalleryScene({
 			plane.z = ((newZ % totalRange) + totalRange) % totalRange;
 			plane.x = spatialPositions[i]?.x ?? 0;
 			plane.y = spatialPositions[i]?.y ?? 0;
-
-			const worldZ = plane.z - halfRange;
 
 			// Calculate opacity based on fade settings
 			const normalizedPosition = plane.z / totalRange; // 0 to 1
@@ -491,8 +488,9 @@ function GalleryScene({
 				const worldZ = plane.z - depthRange / 2;
 
 				// Calculate scale to maintain aspect ratio
-				const aspect = texture.image
-					? texture.image.width / texture.image.height
+				const imgElement = texture.image as HTMLImageElement | undefined;
+				const aspect = imgElement && imgElement.width && imgElement.height
+					? imgElement.width / imgElement.height
 					: 1;
 				const scale: [number, number, number] =
 					aspect > 1 
@@ -546,6 +544,8 @@ export default function InfiniteGallery({
 	images,
 	className = 'h-96 w-full',
 	style,
+	speed,
+	visibleCount,
 	fadeSettings = {
 		fadeIn: { start: 0.05, end: 0.25 },
 		fadeOut: { start: 0.42, end: 0.47 },
@@ -586,11 +586,15 @@ export default function InfiniteGallery({
 				camera={{ position: [0, 0, 0], fov: 55 }}
 				gl={{ antialias: true, alpha: true }}
 			>
-				<GalleryScene
-					images={images}
-					fadeSettings={fadeSettings}
-					blurSettings={blurSettings}
-				/>
+				<Suspense fallback={null}>
+					<GalleryScene
+						images={images}
+						speed={speed}
+						visibleCount={visibleCount}
+						fadeSettings={fadeSettings}
+						blurSettings={blurSettings}
+					/>
+				</Suspense>
 			</Canvas>
 		</div>
 	);
