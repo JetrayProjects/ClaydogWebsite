@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Navbar from './components/Navbar'
 import InfiniteGallery from './components/ui/3d-gallery-photography'
-import ProjectsMenu from './components/ui/ProjectsMenu'
 import FilmDetails from './components/ui/FilmDetails'
-import FadedMorphText from './components/ui/FadedMorphText'
+import Work from '../lib/Work'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { useProgress } from '@react-three/drei'
 
@@ -40,6 +39,39 @@ const images = [
   '/landing_page/Additional PHOTOGRAPHY /_DSF9275.webp'
 ]
 
+const menuData = {
+  'SHORTS': [
+    'Anthyesti',
+    'On the back burner',
+    'Until We Dance Again',
+    'The Photograph'
+  ],
+  'NON-FICTION': [
+    'Example 1',
+    'Example 2',
+    'Example 3'
+  ],
+  'COMMERCIAL': [
+    'Example 1',
+    'Example 2',
+    'Example 3'
+  ],
+  'MUSIC VIDEOS': [
+    'Mysie - Dun Di Dun',
+    'CAVN',
+    'The Blade and The Butterfly'
+  ]
+}
+
+const videoMap = {
+  'Anthyesti': '/videos/Antyesthi/Anthyesti clip.mp4',
+  'On the back burner': '/videos/On the Back Burner/oTBB.mp4',
+  'Until We Dance Again': '/videos/Until We Dance Again/The furnished room clip.mp4',
+  'Mysie - Dun Di Dun': '/videos/MysieDunDiDun/dundidun.mp4',
+  'CAVN': '/videos/cavn/Untitled.mp4',
+  'The Blade and The Butterfly': '/videos/TheBladeandTheButterfly/thebladeandthebutterfly.mp4'
+}
+
 const HoverBranding = ({ onTriggerMenu }) => {
   const { progress, active } = useProgress()
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024)
@@ -70,19 +102,6 @@ const HoverBranding = ({ onTriggerMenu }) => {
 
   const isLoading = loadState < 2
 
-  const handleMouseEnter = () => {
-    if (isLoading) return
-    hoverTimer.current = setTimeout(() => {
-      onTriggerMenu()
-    }, 2000)
-  }
-
-  const handleMouseLeave = () => {
-    if (hoverTimer.current) {
-      clearTimeout(hoverTimer.current)
-    }
-  }
-
   const handleClick = () => {
     if (isLoading) return
     onTriggerMenu()
@@ -102,8 +121,6 @@ const HoverBranding = ({ onTriggerMenu }) => {
         cursor: isLoading ? 'default' : 'pointer',
         padding: '20px'
       }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       onClick={handleClick}
     >
       <motion.div
@@ -115,7 +132,6 @@ const HoverBranding = ({ onTriggerMenu }) => {
           position: 'relative'
         }}
       >
-        <FadedMorphText show={!isLoading} />
         <div style={{
           display: 'flex',
           flexDirection: isMobile ? 'column' : 'row',
@@ -136,7 +152,7 @@ const HoverBranding = ({ onTriggerMenu }) => {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: isMobile ? 'center' : 'flex-start', textAlign: isMobile ? 'center' : 'left' }}>
           <h1 style={{ margin: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <span style={{
-              fontFamily: 'var(--font-hand)',
+              fontFamily: 'var(--font-lostina)',
               fontSize: isMobile ? '5rem' : '6.5rem',
               lineHeight: '1',
               color: 'var(--text-primary)',
@@ -145,7 +161,7 @@ const HoverBranding = ({ onTriggerMenu }) => {
               Claydog
             </span>
             <span style={{
-              fontFamily: '"Syne", var(--font-body), sans-serif',
+              fontFamily: 'var(--font-lostina)',
               fontSize: isMobile ? '1.8rem' : '2.5rem',
               lineHeight: '1',
               fontWeight: 800,
@@ -190,164 +206,127 @@ const HoverBranding = ({ onTriggerMenu }) => {
 }
 
 function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [showMenuContent, setShowMenuContent] = useState(false)
-  const [showInstruction, setShowInstruction] = useState(false)
   const [activeProject, setActiveProject] = useState(null)
   const [lastActiveProject, setLastActiveProject] = useState(null)
   const [activeVideoSrc, setActiveVideoSrc] = useState(null)
-  const returningFromProject = useRef(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowInstruction(true), 2000)
-    return () => clearTimeout(timer)
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
-  // Manage content display timing relative to the clay expansion animation
-  useEffect(() => {
-    let timeoutId;
-    if (isMenuOpen) {
-      if (returningFromProject.current) {
-        // If returning, show menu immediately so shared layout animations can tween back
-        setShowMenuContent(true);
-      } else {
-        timeoutId = setTimeout(() => {
-          setShowMenuContent(true)
-        }, 1200) // Show content after clay fills the screen
-      }
-    } else {
-      setShowMenuContent(false)
-      returningFromProject.current = false // Reset so next menu open waits for clay
+  const scrollContainerRef = useRef(null)
+
+  const scrollToMenu = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
     }
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    }
-  }, [isMenuOpen])
+  }
 
   return (
-    <div className="app-content" style={{ minHeight: '100vh', backgroundColor: '#fff', color: '#1a1a1a', position: 'relative' }}>
+    <div 
+      ref={scrollContainerRef}
+      className="app-content" 
+      style={{ 
+        height: '100vh', 
+        overflowY: activeProject ? 'hidden' : 'auto', // Disable main scroll when detail overlay is open
+        backgroundColor: '#fff', 
+        color: '#1a1a1a', 
+        position: 'relative' 
+      }}
+    >
       <LayoutGroup id="app-routing">
-
-        {/* Home section — always mounted, hidden when a project is active */}
         <motion.section 
-          key="home"
+          key="home-and-menu"
           animate={{ opacity: activeProject ? 0 : 1 }}
           transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
           style={{
-            height: '100vh',
-            width: '100%',
-            position: 'absolute',
-            inset: 0,
-            overflow: 'hidden',
             pointerEvents: activeProject ? 'none' : 'auto',
             visibility: activeProject ? 'hidden' : 'visible',
+            backgroundColor: '#fff' // Keep hero bg white
           }}
         >
-            <InfiniteGallery
-          images={images}
-          speed={1.5}
-          zSpacing={3}
-          visibleCount={10}
-          style={{ height: '100%', width: '100%' }}
-          isPaused={!!activeProject}
-        />
+          {/* Hero Section Container */}
+          <div style={{ 
+            height: '100vh', 
+            width: '100%', 
+            position: 'relative'
+          }}>
+            {/* Fixed Background Gallery */}
+            <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+              <InfiniteGallery
+                images={images}
+                speed={0.7}
+                zSpacing={3}
+                visibleCount={10}
+                style={{ height: '100%', width: '100%' }}
+                isPaused={!!activeProject}
+              />
+              {/* Global Wash Overlay */}
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.75) 80%)'
+              }} />
+            </div>
 
-        {/* Center Hovering Logo & Text Overlay */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          zIndex: 10,
-          background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.75) 80%)'
-        }}>
-          <HoverBranding onTriggerMenu={() => setIsMenuOpen(true)} />
-        </div>
+            {/* Center Hovering Logo & Text Overlay */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              zIndex: 10
+            }}>
+              <HoverBranding onTriggerMenu={scrollToMenu} />
+            </div>
+          </div>
 
-        {/* Black Clay Expanding Animation */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9000,
-          overflow: 'hidden'
-        }}>
-          <motion.div
-            initial={false}
-            animate={{ 
-              scale: isMenuOpen ? 150 : 0,
-              rotate: isMenuOpen ? 90 : 0,
-              borderRadius: isMenuOpen 
-                ? ['60% 40% 30% 70% / 60% 30% 70% 40%', '30% 70% 70% 30% / 30% 30% 70% 70%', '50% 50% 20% 80% / 25% 80% 20% 75%', '0%'] 
-                : '60% 40% 30% 70% / 60% 30% 70% 40%'
-            }}
-            transition={{ duration: 1.5, ease: [0.76, 0, 0.24, 1] }}
-            style={{
-              width: '60px',
-              height: '50px',
-              backgroundColor: '#000000',
-              pointerEvents: 'none'
-            }}
-          />
-        </div>
-
-        {/* Full-Screen Projects Menu overlay */}
-        <AnimatePresence>
-          {showMenuContent && (
-            <ProjectsMenu 
-              skipAnimation={returningFromProject.current}
-              onClose={() => setIsMenuOpen(false)} 
-              onSelectProject={(proj, src) => {
-                returningFromProject.current = false;
+          {/* Work Accordion Section */}
+          <div style={{ 
+            backgroundColor: 'transparent', 
+            minHeight: '100vh',
+            position: 'relative',
+            zIndex: 11
+          }}>
+            <Work 
+              onSelectProject={(proj) => {
                 setActiveProject(proj);
                 setLastActiveProject(proj);
-                setActiveVideoSrc(src);
-              }} 
+                setActiveVideoSrc(proj.video || '');
+              }}
             />
-          )}
-        </AnimatePresence>
+          </div>
 
-        {/* User Interaction Instructions Overlay */}
-        <div style={{
-          position: 'absolute',
-          bottom: '40px',
-          left: 0,
-          right: 0,
-          textAlign: 'center',
-          zIndex: 10,
-          fontFamily: 'var(--font-body)',
-          fontSize: '0.75rem',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          color: 'var(--text-secondary)',
-          pointerEvents: 'none'
-        }}>
-          <p style={{ margin: 0, opacity: 0.8 }}>Scroll or swipe to explore the gallery</p>
-        </div>
-      </motion.section>
+        </motion.section>
 
         {/* Project details — layered on top */}
         <AnimatePresence>
           {activeProject && (
             <motion.section 
               key="project-details"
-              initial={false}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
-              style={{ position: 'absolute', inset: 0, zIndex: 100 }}
+              style={{ position: 'fixed', inset: 0, zIndex: 9999, overflowY: 'auto' }} // Added overflowY: auto to allow scrolling in film details
             >
               <FilmDetails 
                 project={lastActiveProject} 
                 videoSrc={activeVideoSrc} 
                 onBack={() => {
-                  returningFromProject.current = true;
                   setActiveProject(null);
                 }} 
               />
@@ -361,3 +340,4 @@ function App() {
 }
 
 export default App
+
