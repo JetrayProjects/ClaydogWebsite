@@ -72,10 +72,9 @@ const videoMap = {
   'The Blade and The Butterfly': '/videos/TheBladeandTheButterfly/thebladeandthebutterfly.mp4'
 }
 
-const HoverBranding = ({ onTriggerMenu }) => {
+const HoverBranding = () => {
   const { progress, active } = useProgress()
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024)
-  const hoverTimer = useRef(null)
 
   // 0 = unmounted/0%, 1 = crawling to 90%, 2 = finishing to 100%
   const [loadState, setLoadState] = useState(0) 
@@ -101,12 +100,6 @@ const HoverBranding = ({ onTriggerMenu }) => {
   }, [progress, active, loadState])
 
   const isLoading = loadState < 2
-
-  const handleClick = () => {
-    if (isLoading) return
-    onTriggerMenu()
-  }
-
   const isMobile = windowWidth < 768
 
   return (
@@ -117,11 +110,10 @@ const HoverBranding = ({ onTriggerMenu }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        pointerEvents: 'auto',
-        cursor: isLoading ? 'default' : 'pointer',
+        pointerEvents: 'none',
+        cursor: 'default',
         padding: '20px'
       }}
-      onClick={handleClick}
     >
       <motion.div
         style={{
@@ -223,21 +215,19 @@ function App() {
     }
   }, [])
 
-  const scrollContainerRef = useRef(null)
-
-  const scrollToMenu = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
+  useEffect(() => {
+    if (activeProject) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
     }
-  }
+  }, [activeProject])
 
   return (
     <div 
-      ref={scrollContainerRef}
       className="app-content" 
       style={{ 
-        height: '100vh', 
-        overflowY: activeProject ? 'hidden' : 'auto', // Disable main scroll when detail overlay is open
+        minHeight: '100vh', 
         backgroundColor: '#fff', 
         color: '#1a1a1a', 
         position: 'relative' 
@@ -290,7 +280,7 @@ function App() {
               textAlign: 'center',
               zIndex: 10
             }}>
-              <HoverBranding onTriggerMenu={scrollToMenu} />
+              <HoverBranding />
             </div>
           </div>
 

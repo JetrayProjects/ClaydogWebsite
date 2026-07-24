@@ -348,7 +348,8 @@ export default function InfiniteGallery({
 				camera={{ position: [0, 0, 0], fov: 55 }}
 				gl={{ antialias: true, alpha: true }}
 				frameloop={isPaused ? "demand" : "always"}
-				style={{ touchAction: 'auto' }}
+				events={() => ({})}
+				style={{ touchAction: 'auto', pointerEvents: 'none' }}
 			>
 				<Suspense fallback={null}>
 					<GalleryScene images={images} speed={speed} />
