@@ -133,8 +133,7 @@ const HoverBranding = () => {
           style={{
             height: isMobile ? '100px' : '160px',
             width: 'auto',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-            borderRadius: '8px'
+            background: 'transparent'
           }}
         />
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: isMobile ? 'center' : 'flex-start', textAlign: isMobile ? 'center' : 'left' }}>
