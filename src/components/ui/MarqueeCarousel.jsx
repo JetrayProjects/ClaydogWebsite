@@ -1,5 +1,11 @@
 import React from 'react';
 
+const getMobileSrc = (src) => {
+  if (!src || typeof src !== 'string' || src.endsWith('-mobile.webp')) return src;
+  if (src.endsWith('.webp')) return src.replace(/\.webp$/i, '-mobile.webp');
+  return src;
+};
+
 const MarqueeCarousel = ({ images, reverse = false }) => {
   return (
     <div className="marquee-container" style={{ overflow: 'hidden', whiteSpace: 'nowrap', width: '100%', padding: '10px 0', transform: 'translateZ(0)' }}>
@@ -36,6 +42,8 @@ const MarqueeCarousel = ({ images, reverse = false }) => {
           <img 
             key={idx} 
             src={src} 
+            srcSet={`${getMobileSrc(src)} 600w, ${src} 1200w`}
+            sizes="(max-width: 768px) 600px, 100vw"
             alt="Film Still" 
             loading="lazy"
             decoding="async"
