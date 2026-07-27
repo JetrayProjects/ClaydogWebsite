@@ -1,0 +1,11 @@
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/photos/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/landing_page/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/whiteonblack.png
+  Cache-Control: public, max-age=31536000, immutable

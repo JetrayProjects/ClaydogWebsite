@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react'
 import Navbar from './components/Navbar'
-import InfiniteGallery from './components/ui/3d-gallery-photography'
-import FilmDetails from './components/ui/FilmDetails'
 import Work from '../lib/Work'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
-import { useProgress } from '@react-three/drei'
 
+const InfiniteGallery = lazy(() => import('./components/ui/3d-gallery-photography'))
+const FilmDetails = lazy(() => import('./components/ui/FilmDetails'))
 
 const images = [
   '/landing_page/Additional PHOTOGRAPHY /000052.webp',
@@ -73,7 +72,6 @@ const videoMap = {
 }
 
 const HoverBranding = () => {
-  const { progress, active } = useProgress()
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024)
 
   // 0 = unmounted/0%, 1 = crawling to 90%, 2 = finishing to 100%
@@ -85,19 +83,13 @@ const HoverBranding = () => {
     
     // Start hardware-accelerated crawl to 90% immediately
     const frame = requestAnimationFrame(() => setLoadState(1))
+    const timer = setTimeout(() => setLoadState(2), 1200)
     return () => {
       window.removeEventListener('resize', handleResize)
       cancelAnimationFrame(frame)
+      clearTimeout(timer)
     }
   }, [])
-
-  useEffect(() => {
-    // When the actual gallery finishes loading, trigger the final 10%
-    if (progress === 100 || (!active && loadState === 1)) {
-      const timer = setTimeout(() => setLoadState(2), 500) // Small buffer
-      return () => clearTimeout(timer)
-    }
-  }, [progress, active, loadState])
 
   const isLoading = loadState < 2
   const isMobile = windowWidth < 768
@@ -134,6 +126,10 @@ const HoverBranding = () => {
         <img
           src="/whiteonblack.png"
           alt="Claydog Logo"
+          width={isMobile ? 111 : 178}
+          height={isMobile ? 100 : 160}
+          loading="eager"
+          decoding="async"
           style={{
             height: isMobile ? '100px' : '160px',
             width: 'auto',
@@ -252,14 +248,16 @@ function App() {
           }}>
             {/* Fixed Background Gallery */}
             <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-              <InfiniteGallery
-                images={images}
-                speed={0.7}
-                zSpacing={3}
-                visibleCount={10}
-                style={{ height: '100%', width: '100%' }}
-                isPaused={!!activeProject}
-              />
+              <Suspense fallback={null}>
+                <InfiniteGallery
+                  images={images}
+                  speed={0.7}
+                  zSpacing={3}
+                  visibleCount={10}
+                  style={{ height: '100%', width: '100%' }}
+                  isPaused={!!activeProject}
+                />
+              </Suspense>
               {/* Global Wash Overlay */}
               <div style={{
                 position: 'absolute',
@@ -313,13 +311,15 @@ function App() {
               transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
               style={{ position: 'fixed', inset: 0, zIndex: 9999, overflowY: 'auto' }} // Added overflowY: auto to allow scrolling in film details
             >
-              <FilmDetails 
-                project={lastActiveProject} 
-                videoSrc={activeVideoSrc} 
-                onBack={() => {
-                  setActiveProject(null);
-                }} 
-              />
+              <Suspense fallback={null}>
+                <FilmDetails 
+                  project={lastActiveProject} 
+                  videoSrc={activeVideoSrc} 
+                  onBack={() => {
+                    setActiveProject(null);
+                  }} 
+                />
+              </Suspense>
             </motion.section>
           )}
         </AnimatePresence>

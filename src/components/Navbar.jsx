@@ -20,8 +20,12 @@ const Navbar = () => {
       <div className="fluid-container" style={styles.container}>
         <div style={styles.logoContainer}>
           <img 
-            src="/logo.png" 
+            src="/whiteonblack.png" 
             alt="Claydog Media" 
+            width="40"
+            height="36"
+            loading="eager"
+            decoding="async"
             style={styles.logo} 
           />
           <span style={styles.brandName}>Claydog Media</span>
