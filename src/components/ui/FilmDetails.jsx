@@ -175,28 +175,31 @@ const FilmDetails = ({ project, videoSrc, onBack }) => {
       </div>
 
       {/* Middle Section: Stills (Dual Carousels) */}
-      {stills.length > 0 && (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, delay: 0.7, ease: [0.33, 1, 0.68, 1] }}
-          style={{ marginBottom: '4rem', maxWidth: '100vw', marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}>
-          <h2 style={{ 
-            fontFamily: 'var(--font-lostina)', 
-            fontSize: '2.5rem', 
-            textAlign: 'center', 
-            marginBottom: '2rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em'
-          }}>
-            Stills
-          </h2>
-          
-          <MarqueeCarousel images={stills} reverse={false} />
-          {stills.length > 3 && (
-            <MarqueeCarousel images={stills} reverse={true} />
-          )}
-        </motion.div>
-      )}
+      {stills.length > 0 && (() => {
+        const displayStills = stills.slice(0, 16);
+        return (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.7, ease: [0.33, 1, 0.68, 1] }}
+            style={{ marginBottom: '4rem', maxWidth: '100vw', marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}>
+            <h2 style={{ 
+              fontFamily: 'var(--font-lostina)', 
+              fontSize: '2.5rem', 
+              textAlign: 'center', 
+              marginBottom: '2rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em'
+            }}>
+              Stills
+            </h2>
+            
+            <MarqueeCarousel images={displayStills} reverse={false} />
+            {displayStills.length > 3 && (
+              <MarqueeCarousel images={displayStills} reverse={true} />
+            )}
+          </motion.div>
+        );
+      })()}
 
       {/* Bottom Section: Credits */}
       <motion.div 

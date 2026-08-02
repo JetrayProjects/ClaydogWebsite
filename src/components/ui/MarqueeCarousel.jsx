@@ -7,18 +7,17 @@ const getMobileSrc = (src) => {
 };
 
 const MarqueeCarousel = ({ images, reverse = false }) => {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const displayImages = images || [];
+
   return (
-    <div className="marquee-container" style={{ overflow: 'hidden', whiteSpace: 'nowrap', width: '100%', padding: '10px 0', transform: 'translateZ(0)' }}>
+    <div className="marquee-container" style={{ overflow: 'hidden', whiteSpace: 'nowrap', width: '100%', padding: '10px 0' }}>
        <style>
         {`
           .marquee-content {
             display: inline-flex;
             gap: 20px;
             animation: scroll 40s linear infinite;
-            will-change: transform;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            perspective: 1000px;
           }
           .marquee-content.reverse {
             animation: scroll-reverse 40s linear infinite;
@@ -38,26 +37,26 @@ const MarqueeCarousel = ({ images, reverse = false }) => {
       </style>
       <div className={`marquee-content ${reverse ? 'reverse' : ''}`}>
         {/* Render twice for seamless loop */}
-        {[...images, ...images].map((src, idx) => (
-          <img 
-            key={idx} 
-            src={src} 
-            srcSet={`${getMobileSrc(src)} 600w, ${src} 1200w`}
-            sizes="(max-width: 768px) 600px, 100vw"
-            alt="Film Still" 
-            loading="lazy"
-            decoding="async"
-            style={{ 
-              height: '250px', 
-              width: 'auto', 
-              borderRadius: '8px', 
-              cursor: 'pointer', 
-              objectFit: 'cover',
-              willChange: 'transform'
-            }} 
-            onClick={() => window.open(src, '_blank')} // Simple expand for now
-          />
-        ))}
+        {[...displayImages, ...displayImages].map((src, idx) => {
+          const imgSrc = isMobile ? getMobileSrc(src) : src;
+          return (
+            <img 
+              key={idx} 
+              src={imgSrc} 
+              alt="Film Still" 
+              loading="lazy"
+              decoding="async"
+              style={{ 
+                height: '250px', 
+                width: 'auto', 
+                borderRadius: '8px', 
+                cursor: 'pointer', 
+                objectFit: 'cover'
+              }} 
+              onClick={() => window.open(src, '_blank')}
+            />
+          );
+        })}
       </div>
     </div>
   );

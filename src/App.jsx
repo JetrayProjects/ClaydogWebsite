@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react'
 import Navbar from './components/Navbar'
 import Work from '../lib/Work'
+import TeamSection from './components/TeamSection'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 
 const InfiniteGallery = lazy(() => import('./components/ui/3d-gallery-photography'))
@@ -162,7 +163,25 @@ const HoverBranding = () => {
         </div>
       </div>
 
+      <p style={{
+        fontFamily: 'var(--font-body)',
+        fontSize: isMobile ? '0.9rem' : '1rem',
+        color: '#555555',
+        maxWidth: '600px',
+        textAlign: 'center',
+        marginTop: '2rem',
+        lineHeight: '1.6',
+        letterSpacing: '0.02em'
+      }}>
+        Whether we're developing a film, shaping a brand, producing a campaign, or building a creative identity, we start with people.
+        <br />
+        <br />
+        <strong>Stories that connect are the ones that stay</strong>
+      </p>
+
         {/* LOADING BAR */}
+        {/* To put the loading bar back, uncomment the block below */}
+        {/*
         <div style={{
           width: '350px',
           height: '4px',
@@ -187,6 +206,7 @@ const HoverBranding = () => {
             }}
           />
         </div>
+        */}
       </motion.div>
     </div>
   )
@@ -247,16 +267,21 @@ function App() {
           }}>
             {/* Fixed Background Gallery */}
             <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-              <Suspense fallback={null}>
-                <InfiniteGallery
-                  images={images}
-                  speed={0.7}
-                  zSpacing={3}
-                  visibleCount={10}
-                  style={{ height: '100%', width: '100%' }}
-                  isPaused={!!activeProject}
-                />
-              </Suspense>
+              {!activeProject && (
+                <Suspense fallback={null}>
+                  {/* To put the 3D gallery back, uncomment the InfiniteGallery component below */}
+                  {/* 
+                  <InfiniteGallery
+                    images={images}
+                    speed={0.7}
+                    zSpacing={3}
+                    visibleCount={10}
+                    style={{ height: '100%', width: '100%' }}
+                    isPaused={!!activeProject}
+                  /> 
+                  */}
+                </Suspense>
+              )}
               {/* Global Wash Overlay */}
               <div style={{
                 position: 'absolute',
@@ -296,6 +321,9 @@ function App() {
               }}
             />
           </div>
+
+          {/* Interactive Team Section */}
+          <TeamSection />
 
         </motion.section>
 
