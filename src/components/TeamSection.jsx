@@ -36,12 +36,14 @@ export default function TeamSection() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      position: 'relative',
+      zIndex: 10,
     }}>
       <h2 
-        className="text-3xl md:text-5xl lg:text-6xl tracking-widest uppercase text-black bg-transparent leading-none text-center mb-12"
-        style={{ fontFamily: 'var(--font-lostina)' }}
+        className="text-3xl md:text-5xl lg:text-6xl tracking-widest uppercase text-black bg-transparent leading-none text-center"
+        style={{ fontFamily: 'var(--font-lostina)', marginBottom: '3rem' }}
       >
-        The Team
+        Team
       </h2>
 
       <div 
@@ -132,6 +134,16 @@ export default function TeamSection() {
               />
             ))}
           </div>
+        </div>
+
+        {/* INSTRUCTION TEXT */}
+        <div style={{ width: '100%', marginTop: '1rem', textAlign: 'center' }}>
+          <p className="hidden lg:block text-[0.65rem] uppercase tracking-[0.2em]" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-body)' }}>
+            Hover over text or face
+          </p>
+          <p className="block lg:hidden text-[0.65rem] uppercase tracking-[0.2em]" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-body)' }}>
+            Press on name
+          </p>
         </div>
 
         {/* TEXT CONTAINER */}

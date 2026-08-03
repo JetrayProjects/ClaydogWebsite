@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { cn, getMobileSrc } from "./utils";
-import { workSections, Project } from "./data";
+import { cn, getMobileSrc } from "../lib/utils";
+import { workSections, Project } from "../lib/data";
 
 function ProjectRow({
     project,
@@ -128,7 +128,7 @@ export default function Work({ onSelectProject }: { onSelectProject?: (project: 
         <section id="work" className="w-full bg-transparent py-24 flex flex-col min-h-screen">
             {workSections.map((section) => (
                 <div key={section.title} className="flex flex-col w-full" style={{ marginBottom: '150px' }}>
-                    <div className="w-full flex flex-col" style={{ paddingTop: '100px', paddingBottom: '40px' }}>
+                    <div className="w-full flex flex-col" style={{  paddingBottom: '30px' }}>
                         <h2 
                             className="text-3xl md:text-5xl lg:text-6xl tracking-widest uppercase text-black bg-transparent leading-none self-start"
                             style={{ fontFamily: 'var(--font-lostina)', marginLeft: '10%' }}

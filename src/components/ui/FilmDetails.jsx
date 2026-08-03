@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import MarqueeCarousel from './MarqueeCarousel';
 import CreditsCarousel from './CreditsCarousel';
-import { getProjectById } from '../../../lib/data';
+import { getProjectById } from '../../lib/data';
 
 const placeholderCredits = [
   { role: 'Director', name: 'Kushal Dhingra' },

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react'
-import Navbar from './components/Navbar'
-import Work from '../lib/Work'
+import Work from './components/Work'
 import TeamSection from './components/TeamSection'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 
