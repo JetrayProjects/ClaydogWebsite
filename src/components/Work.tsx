@@ -53,7 +53,7 @@ function ProjectRow({
                 {project.poster && (
                     <img
                         src={project.poster}
-                        srcSet={`${getMobileSrc(project.poster)} 600w, ${project.poster} 1200w`}
+                        srcSet={`${encodeURI(getMobileSrc(project.poster))} 600w, ${encodeURI(project.poster)} 1200w`}
                         sizes="(max-width: 768px) 600px, 100vw"
                         alt={project.title}
                         loading="lazy"
