@@ -11,9 +11,9 @@ const teamData = [
   },
   {
     id: 2,
-    name: 'Person Two',
-    position: 'Position',
-    description: 'Description here.',
+    name: 'Casper Galbraith',
+    position: 'Co-founder & Executive Producer',
+    description: 'I turn ambitious ideas into impactful brands and stories combining creative vision with strategic execution to build work that resonates and grows.',
     image: '/team/person2.png',
   },
   {
