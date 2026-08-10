@@ -103,18 +103,6 @@ const FilmDetails = ({ project, videoSrc, onBack }) => {
               {title}
             </motion.h1>
 
-            {role && (
-              <p style={{
-                fontFamily: 'var(--font-body), sans-serif',
-                fontSize: '1.2rem',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: '#666',
-                marginBottom: '2rem'
-              }}>
-                {role}
-              </p>
-            )}
 
             {/* About the film */}
             <motion.div 
