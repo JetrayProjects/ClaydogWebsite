@@ -6,7 +6,6 @@ export type Project = {
     youtubeUrl?: string; // YouTube Embed URL for the full movie
     about?: string[];    // Array of strings, each acts as a paragraph
     stills?: string[];   // Array of image paths for the Stills tab
-    role?: string;       // Role in the project
 };
 
 export type WorkSectionType = {
@@ -21,7 +20,6 @@ export const workSections: WorkSectionType[] = [
             {
                 id: "antyesthi",
                 title: "Antyesthi",
-                role: "Director - Cinematographer",
                 video: "/videos/Antyesthi/Anthyesti clip.mp4",
                 poster: "/photos/Antyesthi/STILLS/Screenshot 2025-01-24 at 21.40.06.webp",
                 youtubeUrl: "https://www.youtube.com/embed/zv2huV2rNeY?si=U9fgFnGy54DWgK4y",
@@ -84,7 +82,6 @@ export const workSections: WorkSectionType[] = [
             {
                 id: "back-burner",
                 title: "On the Back Burner",
-                role: "Cinematographer",
                 video: "/videos/On the Back Burner/oTBB.mp4",
                 poster: "/photos/On the Back Burner/Screenshot (549).webp",
                 youtubeUrl: "https://www.youtube.com/embed/KVu1HsqDFsk?si=WBpbr24PLyS9i1Eb",
@@ -107,7 +104,6 @@ export const workSections: WorkSectionType[] = [
             {
                 id: "until-we-dance",
                 title: "Until We Dance Again",
-                role: "Director",
                 video: "/videos/Until We Dance Again/The furnished room clip.mp4",
                 poster: "/photos/Until We Dance Again/Still 2026-02-18 204336_1.1.2.webp",
                 youtubeUrl: "https://www.youtube.com/embed/62xtHueofcE?si=xV39vI8tceKECFww",
@@ -129,7 +125,6 @@ export const workSections: WorkSectionType[] = [
             {
                 id: "blade-butterfly",
                 title: "The Blade and the Butterfly",
-                role: "Director",
                 video: "/videos/TheBladeandTheButterfly/thebladeandthebutterfly.mp4",
                 poster: "/photos/The-Blade-and-the-Butterfly/README.webp",
                 youtubeUrl: "https://www.youtube.com/embed/Z9fYMrjp7xA?si=hC2_XiJGj3FeAtIF",
@@ -147,7 +142,6 @@ export const workSections: WorkSectionType[] = [
             {
                 id: "vendetta",
                 title: "Vendetta",
-                role: "Visual Director",
                 video: "",
                 poster: "/photos/Vendetta/IMG_2729.webp",
                 about: [
@@ -181,7 +175,6 @@ export const workSections: WorkSectionType[] = [
             {
                 id: "mysie",
                 title: "Mysie - Dun Di Dun",
-                role: "Gaffer",
                 video: "/videos/MysieDunDiDun/dundidun.mp4",
                 poster: "/photos/Mysie-DunDiDun/Untitled.webp",
                 youtubeUrl: "https://www.youtube.com/embed/WSASXHaXZFA?si=AOVc7yhDFsCJeWBX",
@@ -192,8 +185,7 @@ export const workSections: WorkSectionType[] = [
             },
             {
                 id: "cavn",
-                title: "CAVN - Carving Stones ft",
-                role: "Cinematographer",
+                title: "CAVN - Carving Stones",
                 video: "/videos/cavn/Untitled.mp4",
                 poster: "/photos/cavn/cavn.webp",
                 youtubeUrl: "https://www.youtube.com/embed/YyHWmz4JURM?si=Hn1b6ayh01mGn0gM",

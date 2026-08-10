@@ -31,7 +31,7 @@ export default function TeamSection() {
   return (
     <section style={{
       width: '100%',
-      padding: '4rem 2rem',
+      padding: '4rem 2rem 10rem 2rem', // Increased bottom padding for distance
       backgroundColor: '#fff',
       display: 'flex',
       flexDirection: 'column',
@@ -153,6 +153,7 @@ export default function TeamSection() {
           justifyContent: 'space-between',
           marginTop: '2rem',
           gap: '1rem',
+          minHeight: '200px', // Pre-allocate height to prevent layout shift
         }}>
           {teamData.map((person) => {
             const isActive = activePerson === person.id;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react'
 import Work from './components/Work'
 import TeamSection from './components/TeamSection'
+import ContactSection from './components/ContactSection'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 
 const InfiniteGallery = lazy(() => import('./components/ui/3d-gallery-photography'))
@@ -216,6 +217,8 @@ function App() {
   const [lastActiveProject, setLastActiveProject] = useState(null)
   const [activeVideoSrc, setActiveVideoSrc] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
+  const scrollPositionRef = useRef(0)
+  const wasActiveRef = useRef(false)
 
   useEffect(() => {
     const handleResize = () => {
@@ -231,9 +234,15 @@ function App() {
 
   useEffect(() => {
     if (activeProject) {
+      scrollPositionRef.current = window.scrollY
       document.body.style.overflow = 'hidden'
+      wasActiveRef.current = true
     } else {
       document.body.style.overflow = ''
+      if (wasActiveRef.current) {
+        window.scrollTo(0, scrollPositionRef.current)
+        wasActiveRef.current = false
+      }
     }
   }, [activeProject])
 
@@ -323,6 +332,9 @@ function App() {
 
           {/* Interactive Team Section */}
           <TeamSection />
+
+          {/* Contact Section */}
+          <ContactSection />
 
         </motion.section>
 

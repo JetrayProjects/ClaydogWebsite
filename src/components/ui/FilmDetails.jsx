@@ -10,10 +10,6 @@ const placeholderCredits = [
 ];
 
 const FilmDetails = ({ project, videoSrc, onBack }) => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const projObj = typeof project === 'object' && project !== null
     ? project
     : (typeof project === 'string' ? getProjectById(project) : null);
