@@ -84,7 +84,6 @@ export const workSections: WorkSectionType[] = [
                 title: "On the Back Burner",
                 video: "/videos/On the Back Burner/oTBB.mp4",
                 poster: "/photos/On the Back Burner/Screenshot (549).webp",
-                youtubeUrl: "https://www.youtube.com/embed/KVu1HsqDFsk?si=WBpbr24PLyS9i1Eb",
                 about: [
                     "On the Backburner is a slow, intimate drama that follows two immigrant friends in the UK as they drift through conversations about work, dreams, and displacement. Beneath their casual exchanges lies the quiet anxiety of survival — visas, instability, and the fear of being sent back. As tensions rise between responsibility and desire, the film captures the emotional limbo of putting one’s life “on hold” in a foreign land."
                 ],
